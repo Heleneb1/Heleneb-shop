@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<p class="info-text">
+    Here you can find all the products you need. Enjoy your shopping!
+</p>
+
+<div class="product-container">
+    {% for product in products %}
+    <div class="product">
+        <h2>{{ product.name }}</h2>
+        <div class="product-img-container">
+            <img class="product-img" src="{{ product.thumbnail.url }}" alt="{{ product.name }}">
+        </div>
+        <a class="product-btn" href="{{ product.get_absolute_url }}">
+            View Details >>
+        </a>
+        <p>{{ product.description }}</p>
+        <p class="price">Price: ${{ product.price }}</p>
+    </div>
+    {% endfor %}
+</div>
+<script>
+    document.querySelectorAll('.product-img').forEach(img => {
+        img.addEventListener('click', function () {
+            // Si l'image est déjà zoomée, on retire le zoom
+            if (this.classList.contains('zoomed')) {
+                this.classList.remove('zoomed');
+            } else {
+                // Sinon on applique le zoom
+                this.classList.add('zoomed');
+            }
+        });
+    });
+</script>
+
+{% endblock %}

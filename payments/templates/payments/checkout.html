@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .cart-items {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    button {
+        background: #5469d4;
+        color: #ffffff;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<h2>Récap de votre commande</h2>
+<div id="cart-items">
+
+    {% for order in cart.orders.all %}
+    <ul>
+        <li>
+            {{ order.product.name }} - Quantité: {{ order.quantity }} - Prix: {{ order.product.price }}€
+        </li>
+    </ul>
+    {% endfor %}
+
+</div>
+<h3>Adresse de livraison</h3>
+<div class="shipping_address">
+    <p>{{ shipping_address.address_line_1 }} {{ shipping_address.address_line_2 }}</p>
+    <p>{{ shipping_address.city }}, {{ shipping_address.postal_code }}</p>
+    <p>{{ shipping_address.country }}</p>
+</div>
+
+<h3>Adresse de facturation</h3>
+<div class="billing_address">
+    <p>{{ billing_address.address_line_1 }} {{ billing_address.address_line_2 }}</p>
+    <p>{{ billing_address.city }}, {{ billing_address.postal_code }}</p>
+    <p>{{ billing_address.country }}</p>
+</div>
+<h3>Billing address</h3>
+
+<div class='hideable_billing_form'>
+    <div class="md-form mb-5">
+        <input type='text' placeholder='1234 Main St' id='billing_address' name='billing_address'
+            class='form-control' />
+        <label for="billing_address" class="">Address</label>
+    </div>
+
+    <div class="md-form mb-5">
+        <input type='text' placeholder='Apartment or suite' id='billing_address2' name='billing_address2'
+            class='form-control' />
+        <label for="billing_address2" class="">Address 2 (optional)</label>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-12 mb-4">
+            <label for="country">Country</label>
+            {{ form.billing_country }}
+            <div class="invalid-feedback">
+                Please select a valid country.
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <label for="billing_zip">Zip</label>
+            <input type='text' placeholder='Zip code' id='billing_zip' name='billing_zip' class='form-control' />
+            <div class="invalid-feedback">
+                Zip code required.
+            </div>
+        </div>
+
+    </div>
+
+    <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" name="set_default_billing" id="set_default_billing">
+        <label class="custom-control-label" for="set_default_billing">Save as default billing address</label>
+    </div>
+
+</div>
+
+{% if default_billing_address %}
+<div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" name="use_default_billing" id="use_default_billing">
+    <label class="custom-control-label" for="use_default_billing">Use default billing address: {{
+        default_billing_address.street_address|truncatechars:10 }}</label>
+</div>
+{% endif %}
+<hr>
+<div>Total: {{ cart.get_total }}€</div>
+<button id="checkout-button">Payer</button>
+
+{% block extra_scripts %}
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const stripe = Stripe('{{ stripe_public_key }}');
+        const checkoutButton = document.getElementById('checkout-button');
+        const useDefaultCard = document.querySelector('input[name="use_default_card"]');
+        const currentCardForm = document.querySelector('.current-card-form');
+        const newCardForm = document.querySelector('.new-card-form');
+
+        // Toggle between new card form and current card form
+        if (useDefaultCard) {
+            useDefaultCard.addEventListener('change', function () {
+                if (this.checked) {
+                    currentCardForm.classList.remove('hidden');
+                    newCardForm.classList.add('hidden');
+                } else {
+                    currentCardForm.classList.add('hidden');
+                    newCardForm.classList.remove('hidden');
+                }
+            });
+        }
+
+        // Handle checkout button click
+        checkoutButton.addEventListener('click', function () {
+            fetch('/payment/create-checkout-session/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(session => {
+                    return stripe.redirectToCheckout({ sessionId: session.sessionId });
+                })
+                .then(result => {
+                    if (result.error) {
+                        alert(`Erreur : ${result.error.message}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la création de la session :', error);
+                    alert('Une erreur est survenue. Veuillez réessayer.');
+                });
+        });
+    });
+</script>
+{% endblock extra_scripts %}
+{% endblock %}

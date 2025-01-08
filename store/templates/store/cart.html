@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Récapitulatif de votre panier</h2>
+<div class="cart-style">
+    <p>Nombre de produits dans le panier:<span class="length"> {{ orders|length }}</span></p>
+    {% for order in orders %}
+    <div class="cart-container">
+        <h2>{{order.product.name}}</h2>
+        <img src="{{order.product.thumbnail.url}}" alt="{{ order.product.name }}" width="250px">
+        <p>Price: ${{order.product.price}}</p>
+        <p>Quantité: {{order.quantity}} dans le panier</p>
+    </div>
+    {% endfor %}
+</div>
+<a href="{% url 'checkout' %}">Payer</a>
+
+<a href="{% url 'delete-cart' %}">Supprimer le panier</a>
+
+{% endblock %}

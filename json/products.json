@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "Sneakers",
+    "price": 50,
+    "quantity": 5,
+    "description": "De superbes sneakers",
+    "thumbnail": "products/sneakers_tvwJETE.png",
+    "created_at": "2024-12-20 23:22:58.363477",
+    "updated_at": "2024-12-20 23:22:58.363523",
+    "slug": "sneakers"
+  },
+  {
+    "id": 2,
+    "name": "Sneakers bleues",
+    "price": 49,
+    "quantity": 7,
+    "description": "Des sneakers parfaites pour le sport",
+    "thumbnail": "products/bluesneakers_eEhlJGy.png",
+    "created_at": "2024-12-20 23:24:07.860645",
+    "updated_at": "2024-12-20 23:24:07.860694",
+    "slug": "blue-sneakers"
+  },
+  {
+    "id": 3,
+    "name": "T-shirt",
+    "price": 19.99,
+    "quantity": 3,
+    "description": "Un classique",
+    "thumbnail": "products/t-shirt_2ccWXf7.png",
+    "created_at": "2024-12-20 23:25:07.252844",
+    "updated_at": "2024-12-20 23:25:07.252891",
+    "slug": "t-shirt"
+  }
+]

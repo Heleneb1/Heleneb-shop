@@ -44,9 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_countries', 
-    "store",
-    "account",
+    "store", # store app
+    "account", # account app
     "payments",
+    "categories",
     
 ]
 
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'shop.urls'
@@ -140,3 +142,17 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 AUTH_USER_MODEL = "account.Shopper"
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'login'
+
+# Durée de session en secondes
+SESSION_COOKIE_AGE = 5400 #soit 3600+1800 sec
+# Moteur de stockage de session
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+# Supprimer la session lorsqu'un utilisateur ferme le navigateur
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Réactiver la session si l'utilisateur est actif
+SESSION_SAVE_EVERY_REQUEST = True

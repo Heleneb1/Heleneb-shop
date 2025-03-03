@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="category-container">
+    <h1>Produits de la catégorie : {{ category.name }}</h1>
+    <div class="category-description">
+        <p>{{ category.description }}</p>
+    </div>
+    <div class="product-container">
+        {% for product in products %}
+        <div class="product">
+            <h2>{{ product.name }}</h2>
+            <div class="product-img-container">
+                <img class="product-img" src="{{ product.thumbnail.url }}" alt="{{ product.name }}">
+            </div>
+            <a class="product-btn" href="{{ product.get_absolute_url }}">
+                View Details ▶️
+            </a>
+            <p>{{ product.description }}</p>
+            <p class="price">Price: ${{ product.price }}</p>
+        </div>
+        {% empty %}
+        <p>Aucun produit dans cette catégorie.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -47,4 +47,23 @@ dans INSTALLED_APPS ajouter
 
 ```python
 
+from django.shortcuts import render
+from django.conf import settings
+import stripe
+
+stripe.api_key = settings.STRIPE_SECRET
+
+def payment(request):
+    return render(request, 'payments/payment.html')
+
+
 ```
+
+### Annulation repo git
+
+```bash
+rm -rf .git
+
+```
+
+Cela supprimera l'historique Git local tout en gardant les fichiers du projet, annule le git init et vous permet de recommencer l'initialisation de Git.

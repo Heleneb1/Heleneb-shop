@@ -10,3 +10,47 @@ a {
   text-decoration: none;
   color: #fff;
 }
+.pagination {
+  margin-left: 230px;
+}
+.search {
+  display: flex;
+  align-items: center;
+  margin-left: 230px;
+  justify-content: center;
+}
+.num_pages {
+  color: #02d6e8;
+  font-weight: bold;
+  text-align: center;
+}
+.pages {
+  display: inline-block;
+  position: relative;
+}
+
+.pages::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #0087ca;
+  transition: transform 0.25s ease-out;
+}
+
+.pages:hover::after {
+  transform: scaleX(1);
+}
+
+@media screen and (max-width: 600px) {
+  .pagination {
+    margin-left: 0;
+  }
+  form,
+  .search {
+    margin-left: initial;
+  }
+}

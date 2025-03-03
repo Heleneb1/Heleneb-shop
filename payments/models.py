@@ -1,9 +1,6 @@
 from django.db import models
-
-from shop import settings
-
+from django.conf import settings
 from store.models import Order
-from django.db import models
 
 
 class Address(models.Model):
@@ -13,6 +10,8 @@ class Address(models.Model):
     )
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50, default='John')
+    last_name = models.CharField(max_length=50, default='Doe')
     address_line_1 = models.CharField(max_length=255)
     address_line_2 = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=100)
@@ -21,20 +20,25 @@ class Address(models.Model):
     address_type = models.CharField(max_length=10, choices=ADDRESS_TYPES)
     is_default = models.BooleanField(default=False)  # Pour savoir si c'est l'adresse par défaut
 
-    def __str__(self):
-        return f'{self.user.username} - {self.address_type}'
+    def save(self, *args, **kwargs):
+        # Si cette adresse est définie comme par défaut, désactiver les autres du même type
+        if self.is_default:
+            Address.objects.filter(user=self.user, address_type=self.address_type).update(is_default=False)
+        
+        super().save(*args, **kwargs)
 
+    def __str__(self):
+        return f'{self.user.username} - {self.address_type} - {"Default" if self.is_default else "Not Default"}'
 
 
 class Payment(models.Model):
     stripe_charge_id = models.CharField(max_length=50)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                            on_delete=models.SET_NULL, blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
     amount = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.username if self.user else "Anonymous Payment"
 
 
 class Coupon(models.Model):
@@ -52,9 +56,7 @@ class Refund(models.Model):
     email = models.EmailField()
 
     def __str__(self):
-        return f"{self.pk}"
-    
-# ecommerce/models.py
+        return f"Refund {self.pk}"
 
 
 class LineOrder(models.Model):
@@ -63,6 +65,7 @@ class LineOrder(models.Model):
     email = models.EmailField(null=True, blank=True)
     shipping_details = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"Order {self.id} - {self.quantity} units"

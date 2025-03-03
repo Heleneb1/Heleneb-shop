@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Résultats pour "{{ query }}"</h2>
+
+{% if page_obj %}
+<div class="product-container">
+    {% for product in page_obj %}
+
+    <div class="product">
+        <h2>{{ product.name }}</h2>
+        <div class="product-img-container">
+            <img class="product-img" src="{{ product.thumbnail.url }}" alt="{{ product.name }}">
+        </div>
+        <a class="product-btn" href="{{ product.get_absolute_url }}">
+            View Details ▶️
+        </a>
+        <p>{{ product.description }}</p>
+        <p class="price">Price: ${{ product.price }}</p>
+    </div>
+
+    {% empty %}
+    Aucun produit trouvé.
+    {% endfor %}
+
+</div>
+{% else %}
+<p>Aucun produit trouvé pour "{{ query }}".</p>
+{% endif %}
+
+{% endblock %}

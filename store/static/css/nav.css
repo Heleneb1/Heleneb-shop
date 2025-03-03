@@ -1,0 +1,223 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+/* Sidebar */
+.sidebar {
+  height: 100%;
+
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #043554;
+
+  overflow-x: hidden;
+  padding-top: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+li {
+  list-style: none;
+}
+.mobile-footer {
+  display: none;
+}
+
+.content {
+  margin-left: 230px;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #043554;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  margin-left: 11rem;
+}
+.header h2 {
+  background-color: #043554;
+  padding: 2rem;
+}
+
+.header a {
+  color: white;
+  text-decoration: none;
+  font-size: 3rem;
+}
+
+.card,
+.container {
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  margin-bottom: 7rem;
+}
+.container {
+  min-height: 378px;
+}
+.introduction {
+  color: white;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  padding: 2rem;
+}
+.card:hover {
+  transform: scale(1.02);
+}
+
+/* Sidebar Links */
+.sidebar a {
+  text-decoration: none;
+  color: #ffffe6;
+  display: block;
+  padding: 10px 0;
+}
+
+/* Styles pour le menu burger */
+.burger-menu {
+  display: none; /* Caché par défaut sur desktop */
+}
+footer {
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  width: 100%;
+  /* margin-left: 220px; */
+  margin-top: 3rem;
+}
+.logo {
+  height: 7rem;
+  display: flex;
+  justify-content: center;
+}
+.logo-mobile {
+  display: none;
+}
+/* Responsive Design */
+@media screen and (max-width: 1060px) {
+  .leftcolumn,
+  .rightcolumn {
+    width: 100%;
+    padding: 0;
+  }
+  span.no {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .post-detail {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .post-title {
+    font-size: 2rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .content {
+    margin-left: 0;
+  }
+  .sidebar {
+    width: 0;
+    display: none;
+  }
+  .home {
+    flex-direction: column;
+    height: 100%;
+    border: none;
+  }
+  footer {
+    width: 100%;
+    margin-left: 0;
+  }
+  img.avatar-image {
+    width: 100%;
+    height: auto;
+  }
+}
+/* Styles pour le menu burger */
+.burger-menu {
+  display: none; /* Caché par défaut sur desktop */
+}
+
+/* Styles responsive */
+@media screen and (max-width: 768px) {
+  .burger-menu {
+    display: block;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    cursor: pointer;
+  }
+
+  span.burger-icon {
+    font-size: 30px;
+    color: #4ee1ff;
+  }
+  .header {
+    margin: 0;
+  }
+  .sidebar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 350px;
+    height: 100%;
+    z-index: 999;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  .sidebar a {
+    text-decoration: none;
+    color: #ffffe6;
+    display: block;
+    padding: 2rem 0;
+    font-size: 2rem;
+  }
+  .sidebar p {
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #4ee1ff;
+  }
+  .sidebar.active {
+    display: block;
+  }
+  .mobile-footer {
+    padding-top: 2rem;
+    display: block;
+    background: none;
+  }
+  .logo-mobile {
+    display: block;
+    height: 6rem;
+    margin: 0 auto;
+  }
+  nav {
+    margin-bottom: 3rem;
+  }
+}

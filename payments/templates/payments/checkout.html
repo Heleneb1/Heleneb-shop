@@ -1,32 +1,8 @@
 {% extends 'base.html' %}
-
 {% block content %}
-
-<style>
-    .cart-items {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    button {
-        background: #5469d4;
-        color: #ffffff;
-        padding: 12px 24px;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-    .hidden {
-        display: none;
-    }
-</style>
-
 <h2>Récap de votre commande</h2>
-<div id="cart-items">
 
+<div id="cart-items">
     {% for order in cart.orders.all %}
     <ul>
         <li>
@@ -34,108 +10,155 @@
         </li>
     </ul>
     {% endfor %}
+</div>
 
-</div>
 <h3>Adresse de livraison</h3>
-<div class="shipping_address">
-    <p>{{ shipping_address.address_line_1 }} {{ shipping_address.address_line_2 }}</p>
-    <p>{{ shipping_address.city }}, {{ shipping_address.postal_code }}</p>
-    <p>{{ shipping_address.country }}</p>
-</div>
+<ul>
+    {% if shipping_address %}
+    <li>
+        <div class="shipping_address">
+            <p>{{ shipping_address.first_name }}</p>
+            <p>{{ shipping_address.last_name }}</p>
+            <p>{{ shipping_address.address_line_1 }} {{ shipping_address.address_line_2 }}</p>
+            <p>{{ shipping_address.city }}, {{ shipping_address.postal_code }}</p>
+            <p>{{ shipping_address.country }}</p>
+        </div>
+    </li>
+    {% else %}
+    <p>Aucune adresse de livraison enregistrée.</p>
+    {% endif %}
+</ul>
 
 <h3>Adresse de facturation</h3>
-<div class="billing_address">
-    <p>{{ billing_address.address_line_1 }} {{ billing_address.address_line_2 }}</p>
-    <p>{{ billing_address.city }}, {{ billing_address.postal_code }}</p>
-    <p>{{ billing_address.country }}</p>
-</div>
-<h3>Billing address</h3>
-
-<div class='hideable_billing_form'>
-    <div class="md-form mb-5">
-        <input type='text' placeholder='1234 Main St' id='billing_address' name='billing_address'
-            class='form-control' />
-        <label for="billing_address" class="">Address</label>
-    </div>
-
-    <div class="md-form mb-5">
-        <input type='text' placeholder='Apartment or suite' id='billing_address2' name='billing_address2'
-            class='form-control' />
-        <label for="billing_address2" class="">Address 2 (optional)</label>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-4 col-md-12 mb-4">
-            <label for="country">Country</label>
-            {{ form.billing_country }}
-            <div class="invalid-feedback">
-                Please select a valid country.
-            </div>
+<ul>
+    {% if billing_address %}
+    <li>
+        <div class="billing_address" id="billing_address_display">
+            <p>{{ billing_address.first_name }}</p>
+            <p>{{ billing_address.last_name }}</p>
+            <p>{{ billing_address.address_line_1 }} {{ billing_address.address_line_2 }}</p>
+            <p>{{ billing_address.city }}, {{ billing_address.postal_code }}</p>
+            <p>{{ billing_address.country }}</p>
         </div>
-        <div class="col-lg-4 col-md-6 mb-4">
-            <label for="billing_zip">Zip</label>
-            <input type='text' placeholder='Zip code' id='billing_zip' name='billing_zip' class='form-control' />
-            <div class="invalid-feedback">
-                Zip code required.
-            </div>
+    </li>
+    {% else %}
+    <p>Aucune adresse de facturation enregistrée.</p>
+    {% endif %}
+</ul>
+
+<h3>Nouvelle adresse de facturation</h3>
+<form id="billing-address-form" method="POST" action="{% url 'add-address' %}">
+    {% csrf_token %}
+    <input type="hidden" name="address_type" value="billing">
+    <input type='text' placeholder='Nom' id='billing_first_name' name='first_name' class='form-control' />
+    <input type='text' placeholder='Prénom' id='billing_last_name' name='last_name' class='form-control' />
+    <input type='text' placeholder='1 rue de la paix' id='billing_address_line_1' name='address_line_1'
+        class='form-control' />
+    <input type='text' placeholder='Appartement ou suite' id='billing_address_line_2' name='address_line_2'
+        class='form-control' />
+    <input type='text' placeholder='75001' id='billing_zip' name='postal_code' class='form-control' />
+    <input type='text' placeholder='Paris' id='billing_city' name='city' class='form-control' />
+    <input type='text' placeholder='France' id='billing_country' name='country' class='form-control' />
+
+    <div class='hideable_billing_form'>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" name="set_default_billing" id="set_default_billing">
+            <label class="custom-control-label" for="set_default_billing">Définir comme adresse de facturation par
+                défaut</label>
         </div>
-
     </div>
+    <button type="submit" class="btn btn-primary mt-3">Enregistrer cette adresse</button>
+</form>
 
-    <div class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" name="set_default_billing" id="set_default_billing">
-        <label class="custom-control-label" for="set_default_billing">Save as default billing address</label>
+<h3>Nouvelle adresse de Livraison</h3>
+<form id="shipping-address-form" method="POST" action="{% url 'add-address' %}">
+    {% csrf_token %}
+    <input type="hidden" name="address_type" value="shipping">
+    <input type='text' placeholder='Nom' id='shipping_first_name' name='first_name' class='form-control' />
+    <input type='text' placeholder='Prénom' id='shipping_last_name' name='last_name' class='form-control' />
+    <input type='text' placeholder='1 rue de la paix' id='shipping_address_line_1' name='address_line_1'
+        class='form-control' />
+    <input type='text' placeholder='Appartement ou suite' id='shipping_address_line_2' name='address_line_2'
+        class='form-control' />
+    <input type='text' placeholder='75001' id='shipping_zip' name='postal_code' class='form-control' />
+    <input type='text' placeholder='Paris' id='shipping_city' name='city' class='form-control' />
+    <input type='text' placeholder='France' id='shipping_country' name='country' class='form-control' />
+
+    <div class='hideable_shipping_form'>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" name="set_default_shipping" id="set_default_shipping">
+            <label class="custom-control-label" for="set_default_shipping">Définir comme adresse de livraison par
+                défaut</label>
+        </div>
+        {% if default_billing_address %}
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" name="use_default_billing" id="use_default_billing">
+            <label class="custom-control-label" for="use_default_billing">
+                Utiliser l'adresse de facturation par défaut: {{ default_billing_address.address_line_1|truncatechars:10
+                }}
+            </label>
+        </div>
+        {% endif %}
     </div>
+    <button type="submit" class="btn btn-primary mt-3">Enregistrer cette adresse</button>
+</form>
 
-</div>
-
-{% if default_billing_address %}
-<div class="custom-control custom-checkbox">
-    <input type="checkbox" class="custom-control-input" name="use_default_billing" id="use_default_billing">
-    <label class="custom-control-label" for="use_default_billing">Use default billing address: {{
-        default_billing_address.street_address|truncatechars:10 }}</label>
-</div>
-{% endif %}
 <hr>
-<div>Total: {{ cart.get_total }}€</div>
+<div><strong>Total:</strong> {{ cart.get_total }}€</div>
 <button id="checkout-button">Payer</button>
 
 {% block extra_scripts %}
 <script src="https://js.stripe.com/v3/"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const stripe = Stripe('{{ stripe_public_key }}');
         const checkoutButton = document.getElementById('checkout-button');
-        const useDefaultCard = document.querySelector('input[name="use_default_card"]');
-        const currentCardForm = document.querySelector('.current-card-form');
-        const newCardForm = document.querySelector('.new-card-form');
+        const useDefaultBilling = document.getElementById('use_default_billing');
+        const billingForm = document.querySelector('.hideable_billing_form');
 
-        // Toggle between new card form and current card form
-        if (useDefaultCard) {
-            useDefaultCard.addEventListener('change', function () {
+        // Si l'option existe, ajouter un événement pour cacher/afficher le formulaire
+        if (useDefaultBilling) {
+            useDefaultBilling.addEventListener('change', function () {
                 if (this.checked) {
-                    currentCardForm.classList.remove('hidden');
-                    newCardForm.classList.add('hidden');
+                    billingForm.style.display = 'none';
                 } else {
-                    currentCardForm.classList.add('hidden');
-                    newCardForm.classList.remove('hidden');
+                    billingForm.style.display = 'block';
                 }
             });
         }
 
-        // Handle checkout button click
         checkoutButton.addEventListener('click', function () {
+            checkoutButton.disabled = true;
+            checkoutButton.textContent = 'Traitement en cours...';
+
+            // Préparer les données à envoyer
+            let billingData = {};
+
+            // Vérifier si une adresse de facturation existe
+            const billingAddressDiv = document.querySelector('.billing_address');
+            if (billingAddressDiv) {
+                // Les champs de saisie existent probablement déjà avec des valeurs
+                // Il n'est pas nécessaire de les remplir à nouveau depuis les variables Django
+                // car cela ne fonctionnera pas correctement en JavaScript
+            }
+
+            const shipping = document.querySelector('.shipping_address');
+            if (shipping) {
+                // Même commentaire que ci-dessus
+            }
+
             fetch('/payment/create-checkout-session/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    cart_total: '{{ cart.get_total }}',
+                    ...billingData
                 })
+            })
+                .then(response => response.json())
                 .then(session => {
                     return stripe.redirectToCheckout({ sessionId: session.sessionId });
                 })
@@ -147,9 +170,13 @@
                 .catch(error => {
                     console.error('Erreur lors de la création de la session :', error);
                     alert('Une erreur est survenue. Veuillez réessayer.');
+                })
+                .finally(() => {
+                    checkoutButton.disabled = false;
+                    checkoutButton.textContent = 'Payer';
                 });
         });
     });
 </script>
 {% endblock extra_scripts %}
-{% endblock %}
+{% endblock content %}

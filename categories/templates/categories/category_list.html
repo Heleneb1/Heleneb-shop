@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Catégories</h2>
+<div class="categories-container">
+    {% for category in categories %}
+    <div class="categories">
+        <h3>{{ category.name }}</h3>
+        <div class="product-img-container">
+            <img class="category-img" src="{{ category.image.url }}" alt="{{ category.name }}">
+        </div>
+        <a class="product-btn" href="{% url 'products_by_category' category.slug %}">
+
+            This category
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

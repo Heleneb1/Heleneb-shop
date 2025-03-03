@@ -1,3 +1,43 @@
+# Projet e-commerce
+
+creer un projet e-commerce avec Django
+
+## Installation de Django
+
+```bash
+pip install django
+```
+
+## Création du projet
+
+```bash
+django-admin startproject shop
+```
+
+## Création de l'application
+
+```bash
+python manage.py startapp store
+```
+
+## creer l'environnement virtuel
+
+```bash
+python -m venv venv
+```
+
+Puis y accéder
+
+```bash
+source venv/Scripts/activate
+```
+
+## Installation de Django
+
+```bash
+pip install django
+```
+
 ## Ajout des templates html
 
 créer le template directory à la racine du projet
@@ -97,7 +137,7 @@ Pour plus d'informations, consulte [la documentation officielle](https://docs.dj
 
 ## Ajout d'un champs Slug
 
-Pour ajouter un champ slug à un modèle, il faut ajouter un champ de type SlugField à ton modèle. Ce champ est utilisé pour générer des URL lisibles par les humains.
+Pour ajouter un champ slug à un modèle, il faut ajouter un champ de type SlugField à ton modèle. Ce champ est utilisé pour générer des URL lisibles par les utilisateurs.
 
 ```python
 slug = models.SlugField(max_length=255, unique=True)
@@ -196,4 +236,5 @@ ici on a donné une chaine vide
 ```python
 ""
 ```
+
 # helenebshop

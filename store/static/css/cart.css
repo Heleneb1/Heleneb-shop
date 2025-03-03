@@ -1,0 +1,88 @@
+.cart-style {
+  padding: 10px;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ddd;
+  padding: 10px 20px 10px 10px;
+  width: 100%;
+}
+
+.cart-img img {
+  width: auto;
+  height: 10rem;
+}
+
+.cart-details {
+  flex-grow: 1;
+  padding: 0 24px;
+}
+
+.cart-actions {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+}
+
+.cart-actions form {
+  display: flex;
+  align-items: center;
+}
+
+.cart-actions input {
+  height: 2rem;
+  text-align: center;
+  font-weight: 900;
+}
+
+.btn {
+  padding: 8px 8px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  color: black;
+}
+
+.btn-primary {
+  padding: 8px 8px;
+  border: none;
+  cursor: pointer;
+  background: #4ee1ff;
+  font-weight: bold;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.btn-danger {
+  padding: 8px 8px;
+  border: none;
+  cursor: pointer;
+  background: #4ee1ff;
+  font-weight: bold;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.btn-trash {
+  margin-left: 1rem;
+}
+.btn-success {
+  background: #4ee1ff;
+  font-weight: bold;
+}
+
+.cart-button {
+  text-align: center;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+}

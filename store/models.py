@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.db import models
 from django.urls import reverse
 
+from categories.models import Category, Size
 from shop.settings import AUTH_USER_MODEL
 
 # Create your models here.
@@ -22,6 +23,7 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, max_length=255)
     price = models.FloatField(default=0.0)
     quantity = models.IntegerField(default=0)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', default=1)
     description = models.TextField(blank=True)
     thumbnail = models.ImageField(upload_to='products', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -32,6 +34,17 @@ class Product(models.Model):
     # return f"{self.name} ({self.quantity})"
     def get_absolute_url(self):
         return reverse('product', kwargs={'slug':self.slug})
+    
+class ProductSize(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="sizes")
+    size = models.ForeignKey(Size, on_delete=models.CASCADE)
+    stock = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ("product", "size")  # Évite les doublons
+
+    def __str__(self):
+        return f"{self.product.name} - {self.size.name} ({self.stock} en stock)"
     
 # Article(Order)
 """
@@ -45,6 +58,7 @@ class Product(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE) # on_delete=models.CASCADE: si l'utilisateur est supprimé, on supprime aussi ses commandes
     product =models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_size = models.ForeignKey(ProductSize, on_delete=models.CASCADE, null=True, default=1) 
     quantity = models.IntegerField(default=1)
     ordered = models.BooleanField(default=False)
     ordered_date = models.DateTimeField(blank=True, null=True)

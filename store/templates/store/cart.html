@@ -3,19 +3,60 @@
 
 {% block content %}
 <h2>Récapitulatif de votre panier</h2>
-<div class="cart-style">
-    <p>Nombre de produits dans le panier:<span class="length"> {{ orders|length }}</span></p>
-    {% for order in orders %}
-    <div class="cart-container">
-        <h2>{{order.product.name}}</h2>
-        <img src="{{order.product.thumbnail.url}}" alt="{{ order.product.name }}" width="250px">
-        <p>Price: ${{order.product.price}}</p>
-        <p>Quantité: {{order.quantity}} dans le panier</p>
-    </div>
-    {% endfor %}
-</div>
-<a href="{% url 'checkout' %}">Payer</a>
+<p>Nombre total de produits dans le panier : <span class="length">{{ total_quantity }}</span></p>
 
-<a href="{% url 'delete-cart' %}">Supprimer le panier</a>
+<div class="cart-style">
+
+    {% if orders %}
+    <div class="cart-items">
+        {% for order in orders %}
+        <div class="cart-item">
+            <div class="cart-img">
+                <img src="{{ order.product.thumbnail.url }}" alt="{{ order.product.name }}">
+            </div>
+            <div class="cart-details">
+                <h3>{{ order.product.name }}</h3>
+                <p>Prix : ${{ order.product.price }}</p>
+                <p>Taille : {{order.product_size}}</p>
+                <p>Quantité : {{ order.quantity }} dans le panier</p>
+            </div>
+            <div class="cart-actions">
+                <form action="{% url 'remove-from-cart' order.product.slug %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-danger"><i class="fas fa-minus"></i></button>
+                </form>
+                <form action="{% url 'add-to-cart' order.product.slug %}" method="post">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ order.quantity }}" min="1"
+                        max="{{ order.product.quantity|default:1 }}">
+                    <button type="submit" class=" btn-primary"><i class="fas fa-plus"></i></button>
+                </form>
+                <form action="{% url 'remove-all-from-cart' order.product.slug %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-trash"><i class="fas fa-trash"></i></button>
+                </form>
+            </div>
+
+
+        </div>
+        {% endfor %}
+        {% if cart %}
+        <div>Total: {{ cart.get_total }}€</div>
+        {% else %}
+        <p>Aucun panier trouvé.</p>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="alert">
+        <h4>Votre panier est vide 😞</h4>
+        <a href="{% url 'index' %}" class="btn btn-primary">Continuer mes achats</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="cart-button">
+    <a href="{% url 'checkout' %}" class="btn btn-success"><i class="fas fa-credit-card"></i> Payer</a>
+    <a href="{% url 'delete-cart' %}" class="btn btn-danger"><i class="fas fa-trash"></i> Supprimer le panier</a>
+</div>
 
 {% endblock %}

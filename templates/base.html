@@ -1,37 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HeleneB's Shop</title>
+    <title>{% block title %}Crazy Shop{% endblock %}</title>
     {% load static %}
+    <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
+    <!-- Chargement des fichiers CSS -->
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/store.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nav.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
 
+    <!-- Chargement de la bibliothèque JS -->
     <script src="{% static 'js/main.js' %}"></script>
-    <script src="https://js.stripe.com/v3/"></script>
 </head>
 
 <body>
-    <a href="{% url 'index' %}">
-        <h1>Welcome to HeleneB's Shop</h1>
-    </a>
-    {% if user.is_authenticated %}
-    <p>Bienvenue {{ user.username }}, bon Shopping 😉!</p>
-    <a href="{% url 'logout' %}">Déconnexion</a>
-    {% if user.cart %}
-    <a href="{% url 'cart' %}">Panier</a>
-    <p> {{user.cart.orders.count}} dans votre panier</p>
+    <!-- En-tête de la page -->
+
+    <!-- Navigation principale -->
+    {% include 'nav.html' %}
+
+    <!-- Contenu spécifique à chaque page -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    {% if page_obj %}
+    <div class="pagination">
+        <span>
+            {% if page_obj.has_previous %}
+            <a href="?q={{ query }}&page=1">« première</a>
+            <a href="?q={{ query }}&page={{ page_obj.previous_page_number }}"><span class="pages">précédente</span></a>
+            {% endif %}
+
+            <span class="pagination-info">
+                Page <span class="num_pages">{{ page_obj.number }}</span> sur
+                <span class="num_pages">{{ page_obj.paginator.num_pages }}</span> pages
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?q={{ query }}&page={{ page_obj.next_page_number }}"><span class="pages">suivante</span></a>
+            <a href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}"><span class="pages">dernière »</span></a>
+            {% endif %}
+        </span>
+    </div>
     {% endif %}
-    {% else %}
-    <a href="{% url 'signup' %}">S'inscrire</a>
-    <a href="{% url 'login' %}">Se connecter</a>
-    {% endif %}
-    {% block content %}
-    {% endblock %}
+    <!-- Footer -->
     {% include 'footer.html' %}
+
+    <!-- Scripts JavaScript -->
+    <script src="https://js.stripe.com/v3/"></script>
 </body>
 
 </html>

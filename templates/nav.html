@@ -1,0 +1,69 @@
+{% load static %}
+
+<!-- Navbar -->
+<nav>
+    <div class="header">
+        <div>
+            <h2><a href="{% url 'home' %}">Crazy Shop</h2>
+        </div>
+        <div>
+            <img class="logo" src="{% static 'assets/CrazyShop2.png' %}" alt="Crazy Shop">
+        </div>
+
+    </div>
+
+    <!-- Burger Menu Icon (visible sur mobile) -->
+    <div class="burger-menu">
+        <span class="burger-icon">☰</span>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <p><a href="{% url 'home' %}">Crazy Shop</a></p>
+    {% if user.is_authenticated %}
+    <p>Bienvenue {{ user.username }}!</p>
+    {% endif %}
+
+    <ul class="sidebar-menu" aria-labelledby="menu">
+        <li><a href="{% url 'index' %}">Accueil</a></li>
+
+        <li><a href="{% url 'category_list' %}" aria-label="Catégories">Catégories</a></li>
+        <li><a href="#" aria-label="Contact">Contact</a></li>
+        {% if user.is_authenticated %}
+        <!-- <p>Bienvenue {{ user.username }}!</p> -->
+        <li><a href="{% url 'cart' %}">Mon Panier</a></li>
+        <li><a href="{% url 'logout' %}">Se déconnecter</a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}">Se connecter</a></li>
+        <li><a href="{% url 'signup' %}">S'inscrire</a></li>
+        <!-- <i>Veuillez vous connecter.</i> -->
+
+        {% endif %}
+
+
+    </ul>
+    <img class="logo-mobile" src="{% static 'assets/CrazyShop2.png' %}" alt="Crazy Shop">
+    <div class="mobile-footer">
+        <footer>
+            <div>&copy; 2025 Crazy Shop created with Python and Django</div>
+        </footer>
+    </div>
+
+</div>
+<form class="search" method="get" action="{% url 'search' %}">
+    <input type="text" name="q" placeholder="Rechercher un article" aria-label="Search" style="padding: 5px; margin-right: 5px;width: 70%;
+        height: 3rem;
+    ">
+    <button type="submit" style="background-color: #4ee1ff; padding: 5px; height: 3rem; width: 3rem;cursor: pointer;">
+        <i class="fa fa-search fa-2x"></i>
+    </button>
+</form>
+
+
+<script>
+    // Script pour afficher/masquer la sidebar sur mobile
+    document.querySelector('.burger-icon').addEventListener('click', function () {
+        document.querySelector('.sidebar').classList.toggle('active');
+    });
+</script>
